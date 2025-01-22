@@ -18,24 +18,23 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20' # Ensure compatibility with Stencil CLI
+          node-version: '20'  # Ensure compatibility with Stencil CLI
 
-      # Install Stencil CLI
+      # Install Node.js dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Install Stencil CLI globally
       - name: Install Stencil CLI
         run: npm install -g @bigcommerce/stencil-cli
 
-      # Validate theme
+      # Validate the theme
       - name: Validate Theme
         run: stencil bundle
-        env:
-          STORE_URL: ${{ secrets.BC_STORE_URL }}
-          STORE_TOKEN: ${{ secrets.BC_ACCESS_TOKEN }}
-          STORE_HASH: ${{ secrets.BC_STORE_HASH }}
 
-      # Deploy theme
+      # Deploy the theme
       - name: Deploy Theme
-        run: |
-          stencil push -u $STORE_URL -t $STORE_TOKEN -h https://api.bigcommerce.com
+        run: stencil push
         env:
           STORE_URL: ${{ secrets.BC_STORE_URL }}
           STORE_TOKEN: ${{ secrets.BC_ACCESS_TOKEN }}
