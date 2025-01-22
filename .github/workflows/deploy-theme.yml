@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '14' # Ensure compatibility with Stencil CLI
+          node-version: '20' # Ensure compatibility with Stencil CLI
 
       # Install Stencil CLI
       - name: Install Stencil CLI
