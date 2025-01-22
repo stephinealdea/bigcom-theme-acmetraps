@@ -3,33 +3,40 @@ name: Deploy BigCommerce Theme
 on:
   push:
     branches:
-      - master # Trigger deployment on pushes to 'main' branch
+      - master  # Deploy only when changes are pushed to the main branch
 
 jobs:
-  deploy:
+  deploy-theme:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the repository
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      # Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: '14' # Ensure compatibility with Stencil CLI
 
-      - name: Install dependencies
-        run: npm install
-
+      # Install Stencil CLI
       - name: Install Stencil CLI
         run: npm install -g @bigcommerce/stencil-cli
 
-      - name: Configure Stencil CLI
-        run: |
-          stencil config set accessToken "${{ secrets.BIGCOMMERCE_ACCESS_TOKEN }}"
-          stencil config set clientId "${{ secrets.BIGCOMMERCE_CLIENT_ID }}"
-          stencil config set storeHash "${{ secrets.BIGCOMMERCE_STORE_HASH }}"
+      # Validate theme
+      - name: Validate Theme
+        run: stencil bundle
+        env:
+          STORE_URL: ${{ secrets.BC_STORE_URL }}
+          STORE_TOKEN: ${{ secrets.BC_ACCESS_TOKEN }}
+          STORE_HASH: ${{ secrets.BC_STORE_HASH }}
 
-      - name: Push the theme
-        run: stencil push -a Light -d -c https://acmetraps-1694472.mybigcommerce.com/
+      # Deploy theme
+      - name: Deploy Theme
+        run: |
+          stencil push -u $STORE_URL -t $STORE_TOKEN -h https://api.bigcommerce.com
+        env:
+          STORE_URL: ${{ secrets.BC_STORE_URL }}
+          STORE_TOKEN: ${{ secrets.BC_ACCESS_TOKEN }}
+          STORE_HASH: ${{ secrets.BC_STORE_HASH }}
