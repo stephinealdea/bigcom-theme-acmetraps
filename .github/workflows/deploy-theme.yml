@@ -43,7 +43,7 @@ jobs:
 
       # Deploy the theme
       - name: Deploy Theme
-        run: stencil push -a Light -d -c $STORE_URL
+        run: stencil push -a Light -c 1
         env:
           STORE_URL: ${{ secrets.BC_STORE_URL }}
           STORE_TOKEN: ${{ secrets.BC_ACCESS_TOKEN }}
