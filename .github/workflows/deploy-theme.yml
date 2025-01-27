@@ -28,7 +28,7 @@ jobs:
       - name: Install Stencil CLI
         run: npm install -g @bigcommerce/stencil-cli
 
-       - name: Remove old config.stencil.json
+      - name: Remove old config.stencil.json
         run: rm -f config.stencil.json
 
        # Create a fresh config.stencil.json
@@ -43,6 +43,9 @@ jobs:
             "channelId": 1694472
           }' > config.stencil.json
         shell: bash
+
+        - name: Verify config.stencil.json
+        run: cat config.stencil.json
 
          # Initialize Stencil Configuration
       - name: Initialize Stencil
