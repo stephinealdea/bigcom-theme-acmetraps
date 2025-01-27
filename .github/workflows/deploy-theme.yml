@@ -40,7 +40,7 @@ jobs:
             "port": 3000,
             "apiHost": "https://api.bigcommerce.com",
             "customLayouts": {},
-            "channelId": 1694472
+            "channelId": '${{ secrets.BC_CHANNEL_ID }}'
           }' > config.stencil.json
         shell: bash
 
@@ -62,7 +62,8 @@ jobs:
 
       # Deploy the theme
       - name: Deploy Theme
-        run: stencil push -a Light -c 1694472
+        run: |
+         stencil push -a Light -c $STORE_CHANNEL
         env:
           STORE_URL: ${{ secrets.BC_STORE_URL }}
           STORE_TOKEN: ${{ secrets.BC_ACCESS_TOKEN }}
