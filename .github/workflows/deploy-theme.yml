@@ -44,7 +44,7 @@ jobs:
           }' > config.stencil.json
         shell: bash
 
-        - name: Verify config.stencil.json
+      - name: Verify config.stencil.json
         run: cat config.stencil.json
 
          # Initialize Stencil Configuration
