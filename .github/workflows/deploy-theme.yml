@@ -28,16 +28,21 @@ jobs:
       - name: Install Stencil CLI
         run: npm install -g @bigcommerce/stencil-cli
 
-        # Create config.stencil.json dynamically
+       # Validate and create config.stencil.json
       - name: Generate config.stencil.json
         run: |
+          if [[ -z "${{ secrets.BC_CHANNEL_IDS }}" ]]; then
+            echo "Error: BC_CHANNEL_ID is not set or empty" >&2
+            exit 1
+          fi
           echo '{
             "normalStoreUrl": "${{ secrets.BC_STORE_URL }}",
             "accessToken": "${{ secrets.BC_ACCESS_TOKEN }}",
             "port": 3000,
             "apiHost": "https://api.bigcommerce.com",
-            "channelId": ${{ secrets.BC_CHANNEL_ID }}
+            "channelId": '${{ secrets.BC_CHANNEL_ID }}'
           }' > config.stencil.json
+        shell: bash
 
          # Initialize Stencil Configuration
       - name: Initialize Stencil
@@ -54,7 +59,7 @@ jobs:
 
       # Deploy the theme
       - name: Deploy Theme
-        run: stencil push -a Light -c 1694472
+        run: stencil push -a Light -c ${{ secrets.BC_CHANNEL_ID }}
         env:
           STORE_URL: ${{ secrets.BC_STORE_URL }}
           STORE_TOKEN: ${{ secrets.BC_ACCESS_TOKEN }}
