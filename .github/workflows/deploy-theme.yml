@@ -31,7 +31,7 @@ jobs:
          # Initialize Stencil Configuration
       - name: Initialize Stencil
         run: |
-          stencil init -u $STORE_URL -t $STORE_TOKEN -h https://api.bigcommerce.com
+          stencil init --url $STORE_URL --token $STORE_TOKEN
         env:
           STORE_URL: ${{ secrets.BC_STORE_URL }}
           STORE_TOKEN: ${{ secrets.BC_ACCESS_TOKEN }}
