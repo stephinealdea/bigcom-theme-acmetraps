@@ -40,7 +40,7 @@ jobs:
             "port": 3000,
             "apiHost": "https://api.bigcommerce.com",
             "customLayouts": {},
-            "channelId": '${{ secrets.BC_CHANNEL_ID || 1694472 }}'
+            "channelId": ${{ secrets.BC_CHANNEL_ID || 1694472 }}
           }' > config.stencil.json
         shell: bash
 
