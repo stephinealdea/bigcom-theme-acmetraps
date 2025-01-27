@@ -28,10 +28,11 @@ jobs:
       - name: Install Stencil CLI
         run: npm install -g @bigcommerce/stencil-cli
 
+      # Remove any old config.stencil.json
       - name: Remove old config.stencil.json
         run: rm -f config.stencil.json
 
-       # Create a fresh config.stencil.json
+      # Create an initial config.stencil.json
       - name: Generate config.stencil.json
         run: |
           echo '{
@@ -40,21 +41,24 @@ jobs:
             "port": 3000,
             "apiHost": "https://api.bigcommerce.com",
             "customLayouts": {},
-            "channelId": '${{ secrets.BC_CHANNEL_ID || 1694472 }}'
+            "channelId": ${{ secrets.BC_CHANNEL_ID || 1694472 }}
           }' > config.stencil.json
         shell: bash
 
+      # Verify config.stencil.json
       - name: Verify config.stencil.json
         run: cat config.stencil.json
 
-         # Initialize Stencil Configuration
+      # Initialize Stencil Configuration
       - name: Initialize Stencil
-        run: |
-          stencil init --url $STORE_URL --token $STORE_TOKEN
+        run: stencil init --url $STORE_URL --token $STORE_TOKEN
         env:
           STORE_URL: ${{ secrets.BC_STORE_URL }}
           STORE_TOKEN: ${{ secrets.BC_ACCESS_TOKEN }}
-          STORE_HASH: ${{ secrets.BC_STORE_HASH }}
+
+      # Revalidate config.stencil.json
+      - name: Revalidate config.stencil.json
+        run: cat config.stencil.json
 
       # Validate the theme
       - name: Validate Theme
@@ -66,5 +70,3 @@ jobs:
         env:
           STORE_URL: ${{ secrets.BC_STORE_URL }}
           STORE_TOKEN: ${{ secrets.BC_ACCESS_TOKEN }}
-          STORE_HASH: ${{ secrets.BC_STORE_HASH }}
-          STORE_CHANNEL: ${{ secrets.BC_CHANNEL_ID }}
