@@ -28,6 +28,17 @@ jobs:
       - name: Install Stencil CLI
         run: npm install -g @bigcommerce/stencil-cli
 
+        # Create config.stencil.json dynamically
+      - name: Generate config.stencil.json
+        run: |
+          echo '{
+            "normalStoreUrl": "${{ secrets.BC_STORE_URL }}",
+            "accessToken": "${{ secrets.BC_ACCESS_TOKEN }}",
+            "port": 3000,
+            "apiHost": "https://api.bigcommerce.com",
+            "channelId": ${{ secrets.BC_CHANNEL_ID }}
+          }' > config.stencil.json
+
          # Initialize Stencil Configuration
       - name: Initialize Stencil
         run: |
@@ -43,7 +54,7 @@ jobs:
 
       # Deploy the theme
       - name: Deploy Theme
-        run: stencil push -a Light -c 1
+        run: stencil push --activate Light --channel_ids ${{ secrets.BC_CHANNEL_ID }}
         env:
           STORE_URL: ${{ secrets.BC_STORE_URL }}
           STORE_TOKEN: ${{ secrets.BC_ACCESS_TOKEN }}
